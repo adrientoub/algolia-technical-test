@@ -6,6 +6,7 @@ class Container
     @content = {}
   end
 
+  # parses an input tsv file containing date\tquery
   def parse_file(filename)
     start = Time.now
     open filename do |file|
@@ -22,6 +23,11 @@ class Container
     puts "Done in #{Time.now - start} seconds."
   end
 
+  private
+
+  # inserts a value in the prefix tree
+  # date: String describing a date of the form 'YYYY-MM-DD HH-mm-ss'
+  # value: any query you want to insert into the tree
   def insert(date, value)
     date_time = DateTime.parse(date)
     # Create necessary fields if they do not exist
@@ -51,6 +57,7 @@ class Container
     find_distinct(struct).size
   end
 
+  # adds all values of hash2 into hash1 and returns hash1
   def merge_hash(hash1, hash2)
     hash2.each do |k, count|
       hash1[k] ||= 0
@@ -76,6 +83,9 @@ class Container
     end
   end
 
+  public
+
+  # count the distinct queries for a specific timeframe
   def count_distinct(year, month=-1, day=-1, hour=-1, min=-1, sec=-1)
     if month == -1
       distinct_in_structure(@content.dig(year))
@@ -92,6 +102,7 @@ class Container
     end
   end
 
+  # finds all the 'limit' most popular queries
   def find_popular_with_limit(limit, year, month=-1, day=-1, hour=-1, min=-1, sec=-1)
     populars = find_popular(year, month, day, hour, min, sec)
     populars.max_by(limit) do |_, item|
@@ -99,6 +110,7 @@ class Container
     end
   end
 
+  # finds all queries done at a specific time and their count
   def find_popular(year, month=-1, day=-1, hour=-1, min=-1, sec=-1)
     if month == -1
       find_popular_in_structure(@content.dig(year))

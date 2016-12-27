@@ -6,6 +6,11 @@ For this code to work you need:
 * Ruby 2.3.0 or greater (tested on Ruby 2.4.0)
 * `bundler` for gem installation
 
+## Data
+
+For this server to work you need to have a file named `hn_logs.tsv` containing
+a date (of the form 'YYYY-MM-DD HH-mm-ss'), a tabulation and a query.
+
 ## Quick start
 
 To launch the server just go in the root of the repository and run:
@@ -16,7 +21,8 @@ rackup # will launch the server
 ```
 
 You can then use any `rackup` option to set parameters to the server. For
-instance you can use `rackup -p 3000` to launch the server on the port 3000.
+instance you can use `rackup -p 3000 -o 0.0.0.0` to launch the server on the
+port `3000` (default `9292`) and listening on `0.0.0.0` (default `localhost`).
 
 ## Requests
 

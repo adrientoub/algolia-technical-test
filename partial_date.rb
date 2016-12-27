@@ -12,11 +12,8 @@ class PartialDate
 
   def self.parse(date)
     date_part, time_part = date.split('%20')
-    puts "date_part: #{date_part}"
-    puts "time_part: #{time_part}"
     y, m, d = date_part.split('-')
 
-    p [y, m, d]
     if m.nil?
       PartialDate.new(y.to_i)
     elsif d.nil?
@@ -25,7 +22,6 @@ class PartialDate
       PartialDate.new(y.to_i, m.to_i, d.to_i)
     else
       h, min, s = time_part.split(':')
-      p [h, min, s]
       if min.nil?
         PartialDate.new(y.to_i, m.to_i, d.to_i, h.to_i)
       elsif s.nil?
