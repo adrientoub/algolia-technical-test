@@ -1,4 +1,3 @@
-require 'json'
 require 'date'
 require 'set'
 
@@ -25,6 +24,7 @@ class Container
 
   def insert(date, value)
     date_time = DateTime.parse(date)
+    # Create necessary fields if they do not exist
     @content[date_time.year] ||= {}
     @content[date_time.year][date_time.month] ||= {}
     @content[date_time.year][date_time.month][date_time.day] ||= {}
@@ -94,7 +94,7 @@ class Container
 
   def find_popular_with_limit(limit, year, month=-1, day=-1, hour=-1, min=-1, sec=-1)
     populars = find_popular(year, month, day, hour, min, sec)
-    populars.max_by(limit) do |key, item|
+    populars.max_by(limit) do |_, item|
       item
     end
   end

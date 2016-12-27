@@ -1,3 +1,5 @@
+require 'json'
+
 require_relative 'container'
 require_relative 'partial_date'
 
