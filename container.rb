@@ -84,11 +84,11 @@ class Container
     elsif hour == -1
       distinct_in_structure(@content.dig(year, month, day))
     elsif min == -1
-      distinct_in_structure(@content.dig(year, month, hour))
+      distinct_in_structure(@content.dig(year, month, day, hour))
     elsif sec == -1
-      distinct_in_structure(@content.dig(year, month, hour, min))
+      distinct_in_structure(@content.dig(year, month, day, hour, min))
     else
-      distinct_in_structure(@content.dig(year, month, hour, min, sec))
+      distinct_in_structure(@content.dig(year, month, day, hour, min, sec))
     end
   end
 
@@ -107,11 +107,11 @@ class Container
     elsif hour == -1
       find_popular_in_structure(@content.dig(year, month, day))
     elsif min == -1
-      find_popular_in_structure(@content.dig(year, month, hour))
+      find_popular_in_structure(@content.dig(year, month, day, hour))
     elsif sec == -1
-      find_popular_in_structure(@content.dig(year, month, hour, min))
+      find_popular_in_structure(@content.dig(year, month, day, hour, min))
     else
-      find_popular_in_structure(@content.dig(year, month, hour, min, sec))
+      find_popular_in_structure(@content.dig(year, month, day, hour, min, sec))
     end
   end
 end

@@ -37,8 +37,8 @@ class Http
       popular = @container.find_popular_with_limit(params['size'].to_i, date.year, date.month, date.day, date.hour, date.min, date.sec)
     end
 
-    to_json({ queries: popular.map do |popular|
-      { query: popular[0], count: popular[1] }
+    to_json({ queries: popular.map do |entry|
+      { query: entry[0], count: entry[1] }
     end })
   end
 
@@ -58,13 +58,8 @@ class Http
   end
 
   def call(env)
-    p env['PATH_INFO']
-    p env['QUERY_STRING']
-    if env['REQUEST_METHOD'] != 'GET'
-      return not_found
-    end
+    return not_found unless env['REQUEST_METHOD'] == 'GET'
 
     router(env['PATH_INFO'], env['QUERY_STRING'])
-    # ['200', { 'Content-Type' => 'text/html' }, ['get rackd']]
   end
 end
