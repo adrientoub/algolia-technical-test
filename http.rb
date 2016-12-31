@@ -25,7 +25,7 @@ class Http
   def count_query(date_string)
     date = PartialDate.parse(date_string)
 
-    to_json count: @container.count_distinct(date.year, date.month, date.day, date.hour, date.min, date.sec)
+    to_json count: @container.count_distinct(*date.date)
   end
 
   def popular_query(date_string, query_string)
@@ -34,9 +34,9 @@ class Http
 
     popular = nil
     if params['size'].nil?
-      popular = @container.find_popular(date.year, date.month, date.day, date.hour, date.min, date.sec)
+      popular = @container.find_popular(*date.date)
     else
-      popular = @container.find_popular_with_limit(params['size'].to_i, date.year, date.month, date.day, date.hour, date.min, date.sec)
+      popular = @container.find_popular_with_limit(params['size'].to_i, *date.date)
     end
 
     to_json({ queries: popular.map do |entry|

@@ -40,21 +40,21 @@ class Container
     @content[date_time.year][date_time.month][date_time.day][date_time.hour][date_time.min][date_time.sec] << value
   end
 
-  def find_distinct(struct)
-    set = Set.new
+  def find_distinct(struct, set)
     if struct.is_a?(Hash)
       struct.each do |_, value|
-        set = set | find_distinct(value)
+        find_distinct(value, set)
       end
-      set
     else # struct.is_a?(Array)
-      Set.new(struct)
+      set.merge(struct)
     end
   end
 
   def distinct_in_structure(struct)
     return 0 if struct.nil?
-    find_distinct(struct).size
+    set = Set.new
+    find_distinct(struct, set)
+    set.size
   end
 
   # adds all values of hash2 into hash1 and returns hash1
@@ -86,44 +86,22 @@ class Container
   public
 
   # count the distinct queries for a specific timeframe
-  def count_distinct(year, month=-1, day=-1, hour=-1, min=-1, sec=-1)
-    if month == -1
-      distinct_in_structure(@content.dig(year))
-    elsif day == -1
-      distinct_in_structure(@content.dig(year, month))
-    elsif hour == -1
-      distinct_in_structure(@content.dig(year, month, day))
-    elsif min == -1
-      distinct_in_structure(@content.dig(year, month, day, hour))
-    elsif sec == -1
-      distinct_in_structure(@content.dig(year, month, day, hour, min))
-    else
-      distinct_in_structure(@content.dig(year, month, day, hour, min, sec))
-    end
+  # should be given in the correct order:
+  #   year, month, day, hour, min, sec
+  def count_distinct(*date)
+    distinct_in_structure(@content.dig(*date))
   end
 
   # finds all the 'limit' most popular queries
-  def find_popular_with_limit(limit, year, month=-1, day=-1, hour=-1, min=-1, sec=-1)
-    populars = find_popular(year, month, day, hour, min, sec)
+  def find_popular_with_limit(limit, *date)
+    populars = find_popular(*date)
     populars.max_by(limit) do |_, item|
       item
     end
   end
 
   # finds all queries done at a specific time and their count
-  def find_popular(year, month=-1, day=-1, hour=-1, min=-1, sec=-1)
-    if month == -1
-      find_popular_in_structure(@content.dig(year))
-    elsif day == -1
-      find_popular_in_structure(@content.dig(year, month))
-    elsif hour == -1
-      find_popular_in_structure(@content.dig(year, month, day))
-    elsif min == -1
-      find_popular_in_structure(@content.dig(year, month, day, hour))
-    elsif sec == -1
-      find_popular_in_structure(@content.dig(year, month, day, hour, min))
-    else
-      find_popular_in_structure(@content.dig(year, month, day, hour, min, sec))
-    end
+  def find_popular(*date)
+    find_popular_in_structure(@content.dig(*date))
   end
 end
