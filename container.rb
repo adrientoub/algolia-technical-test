@@ -40,7 +40,7 @@ class Container
     @content[date_time.year][date_time.month][date_time.day][date_time.hour][date_time.min][date_time.sec] << value
   end
 
-  def find_distinct(struct, set)
+  def find_distinct(struct, set=Set.new)
     if struct.is_a?(Hash)
       struct.each do |_, value|
         find_distinct(value, set)
@@ -48,39 +48,26 @@ class Container
     else # struct.is_a?(Array)
       set.merge(struct)
     end
+    set
   end
 
   def distinct_in_structure(struct)
     return 0 if struct.nil?
-    set = Set.new
-    find_distinct(struct, set)
-    set.size
+    find_distinct(struct).size
   end
 
-  # adds all values of hash2 into hash1 and returns hash1
-  def merge_hash(hash1, hash2)
-    hash2.each do |k, count|
-      hash1[k] ||= 0
-      hash1[k] += count
-    end
-    hash1
-  end
-
-  def find_popular_in_structure(struct)
+  def find_popular_in_structure(struct, hash={})
     if struct.is_a?(Hash)
-      hash = {}
       struct.each do |_, value|
-        merge_hash(hash, find_popular_in_structure(value))
+        find_popular_in_structure(value, hash)
       end
-      hash
     else # struct.is_a?(Array)
-      hash = {}
       struct.each do |value|
         hash[value] ||= 0
         hash[value] += 1
       end
-      hash
     end
+    hash
   end
 
   public
